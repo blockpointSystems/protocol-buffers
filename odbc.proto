@@ -13,7 +13,6 @@ message InitializationRequest {
     string username = 1;
     string password = 2;
     string db_name  = 3;
-
     authPacket auth = 4;
 }
 
@@ -37,7 +36,6 @@ message XactRequest {
 message XactResponse {
     authPacket auth = 1;
     uint64 xact_id  = 2;
-    //    bool   success = 2;
 }
 
 message ExecRequest {
