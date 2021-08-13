@@ -1,4 +1,4 @@
-module gitlab.com/blockpoint/protocol-buffers
+module github.com/blockpointSystems/protocol-buffers
 
 go 1.16
 
