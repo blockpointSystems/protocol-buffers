@@ -97,18 +97,14 @@ enum datatype {
     UINT32 = 9;
     INT64  = 10;
     UINT64 = 11;
-
     FLOAT32    = 12;
     FLOAT64    = 13;
-    //    COMPLEX64  = 12;
-    //    COMPLEX128 = 13;
-    //
-    //    UINTPTR = 14;
-
     BOOL = 14;
-
     TIMESTAMP = 15;
-    UUID      = 16;
+    DATETIME = 16;
+    DATE = 17;
+    TIME = 18;
+    UUID = 19;
 }
 
 message row {

@@ -167,6 +167,7 @@ type MDBServiceServer interface {
 	Query(*QueryRequest, MDBService_QueryServer) error
 	CloseQuery(context.Context, *AuthPacket) (*CloseQueryResponse, error)
 	Load(MDBService_LoadServer) error
+	mustEmbedUnimplementedMDBServiceServer()
 }
 
 // UnimplementedMDBServiceServer must be embedded to have forward compatible implementations.
