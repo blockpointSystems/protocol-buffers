@@ -122,7 +122,8 @@ message StoreFileRequest {
   authPacket auth = 1;
 
   string file_name = 2;
-  bytes  file_bytes = 3;
+  string file_extension = 3;
+  bytes  file_bytes = 4;
 }
 
 message StoreFileResponse {
@@ -132,6 +133,21 @@ message StoreFileResponse {
   int64 file_size = 3;
 
   duration duration = 4;
+}
+
+message ExportFileRequest {
+  authPacket auth = 1;
+
+  string file_name    = 2;
+  int64  package_size = 3;
+}
+
+message ExportFileResponse {
+  authPacket auth = 1;
+
+  bytes file_bytes = 2;
+
+  duration duration = 3;
 }
 
 
@@ -169,6 +185,7 @@ service MDBService {
 
 
   rpc StoreFile(stream StoreFileRequest) returns (StoreFileResponse) {};
+  rpc ExportFile(ExportFileRequest) returns (stream ExportFileResponse) {};
 
   // Close
 

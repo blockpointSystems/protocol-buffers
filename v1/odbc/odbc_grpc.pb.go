@@ -13,7 +13,6 @@ import (
 	status "google.golang.org/grpc/status"
 )
 
-
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
 // Requires gRPC-Go v1.32.0 or later.
@@ -35,6 +34,7 @@ type MDBServiceClient interface {
 	Query(ctx context.Context, in *QueryRequest, opts ...grpc.CallOption) (MDBService_QueryClient, error)
 	CloseQuery(ctx context.Context, in *AuthPacket, opts ...grpc.CallOption) (*CloseQueryResponse, error)
 	StoreFile(ctx context.Context, opts ...grpc.CallOption) (MDBService_StoreFileClient, error)
+	ExportFile(ctx context.Context, in *ExportFileRequest, opts ...grpc.CallOption) (MDBService_ExportFileClient, error)
 }
 
 type mDBServiceClient struct {
@@ -156,6 +156,38 @@ func (x *mDBServiceStoreFileClient) CloseAndRecv() (*StoreFileResponse, error) {
 	return m, nil
 }
 
+func (c *mDBServiceClient) ExportFile(ctx context.Context, in *ExportFileRequest, opts ...grpc.CallOption) (MDBService_ExportFileClient, error) {
+	stream, err := c.cc.NewStream(ctx, &MDBService_ServiceDesc.Streams[2], "/odbc.v1.MDBService/ExportFile", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &mDBServiceExportFileClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type MDBService_ExportFileClient interface {
+	Recv() (*ExportFileResponse, error)
+	grpc.ClientStream
+}
+
+type mDBServiceExportFileClient struct {
+	grpc.ClientStream
+}
+
+func (x *mDBServiceExportFileClient) Recv() (*ExportFileResponse, error) {
+	m := new(ExportFileResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // MDBServiceServer is the server API for MDBService service.
 // All implementations must embed UnimplementedMDBServiceServer
 // for forward compatibility
@@ -172,7 +204,8 @@ type MDBServiceServer interface {
 	Query(*QueryRequest, MDBService_QueryServer) error
 	CloseQuery(context.Context, *AuthPacket) (*CloseQueryResponse, error)
 	StoreFile(MDBService_StoreFileServer) error
-	//mustEmbedUnimplementedMDBServiceServer()
+	ExportFile(*ExportFileRequest, MDBService_ExportFileServer) error
+	mustEmbedUnimplementedMDBServiceServer()
 }
 
 // UnimplementedMDBServiceServer must be embedded to have forward compatible implementations.
@@ -199,6 +232,9 @@ func (UnimplementedMDBServiceServer) CloseQuery(context.Context, *AuthPacket) (*
 }
 func (UnimplementedMDBServiceServer) StoreFile(MDBService_StoreFileServer) error {
 	return status.Errorf(codes.Unimplemented, "method StoreFile not implemented")
+}
+func (UnimplementedMDBServiceServer) ExportFile(*ExportFileRequest, MDBService_ExportFileServer) error {
+	return status.Errorf(codes.Unimplemented, "method ExportFile not implemented")
 }
 func (UnimplementedMDBServiceServer) mustEmbedUnimplementedMDBServiceServer() {}
 
@@ -350,6 +386,27 @@ func (x *mDBServiceStoreFileServer) Recv() (*StoreFileRequest, error) {
 	return m, nil
 }
 
+func _MDBService_ExportFile_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(ExportFileRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(MDBServiceServer).ExportFile(m, &mDBServiceExportFileServer{stream})
+}
+
+type MDBService_ExportFileServer interface {
+	Send(*ExportFileResponse) error
+	grpc.ServerStream
+}
+
+type mDBServiceExportFileServer struct {
+	grpc.ServerStream
+}
+
+func (x *mDBServiceExportFileServer) Send(m *ExportFileResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // MDBService_ServiceDesc is the grpc.ServiceDesc for MDBService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -388,6 +445,11 @@ var MDBService_ServiceDesc = grpc.ServiceDesc{
 			StreamName:    "StoreFile",
 			Handler:       _MDBService_StoreFile_Handler,
 			ClientStreams: true,
+		},
+		{
+			StreamName:    "ExportFile",
+			Handler:       _MDBService_ExportFile_Handler,
+			ServerStreams: true,
 		},
 	},
 	Metadata: "odbc.proto",
