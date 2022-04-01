@@ -121,9 +121,13 @@ message CloseResponse {
 message StoreFileRequest {
   authPacket auth = 1;
 
-  string file_name = 2;
+  string file_name      = 2;
   string file_extension = 3;
-  bytes  file_bytes = 4;
+  int64  file_size      = 4;
+
+  int64 file_bit_id    = 5;
+  int64 file_bit_size  = 6;
+  bytes file_bit_bytes = 7;
 }
 
 message StoreFileResponse {
@@ -138,16 +142,20 @@ message StoreFileResponse {
 message ExportFileRequest {
   authPacket auth = 1;
 
-  string file_name    = 2;
-  int64  package_size = 3;
+  string file_name      = 2;
+  string file_extension = 3;
+  int64  file_bit_size  = 4;
 }
 
 message ExportFileResponse {
   authPacket auth = 1;
 
-  bytes file_bytes = 2;
+  int64 file_size = 2;
 
-  duration duration = 3;
+  int64 file_bit_id     = 3;
+  bytes file_bit_bytes  = 4;
+
+  duration duration = 5;
 }
 
 
