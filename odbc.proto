@@ -3,7 +3,7 @@ syntax = "proto3";
 package odbc.v1;
 
 // bsqlpb is the golang package that will be used to communicate and cary out transactions with the database
-option go_package = "gitlab.com/blockpoint/protocol-buffers/v1/odbc";
+option go_package = "github.com/blockpointSystems/protocol-buffers/v1/odbc";
 
 
 message DummyRequest {}
